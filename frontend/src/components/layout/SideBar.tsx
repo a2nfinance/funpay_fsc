@@ -10,7 +10,6 @@ import { ReactNode } from 'react';
 
 
 import { useStyleConfig } from "@chakra-ui/react";
-import { useAppSelector } from 'src/controller/hooks';
 import { MobileNav } from './MobileNav';
 import { SidebarContent } from './SidebarContent';
 
@@ -21,7 +20,6 @@ export default function SidebarWithHeader({
     children: ReactNode;
 }) {
     const { isOpen, onOpen, onClose } = useDisclosure();
-    const isHana = useAppSelector((state) => state.network.isHana);
 
     const sidebarWrapper = useStyleConfig("SidebarWrapper");
     return (
