@@ -1,0 +1,1 @@
+exports.deployContract = require("./01_deployContract");
