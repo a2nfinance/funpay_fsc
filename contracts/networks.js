@@ -14,7 +14,7 @@ if (!isTestEnvironment && !PRIVATE_KEY) {
 }
 
 const networks = {
-  mode_sepolia: {
+  fsc: {
     url: process.env.RPC_URL || "THIS HAS NOT BEEN SET",
     gasPrice: undefined,
     accounts: PRIVATE_KEY !== undefined ? [PRIVATE_KEY] : [],

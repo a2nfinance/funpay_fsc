@@ -47,6 +47,10 @@ module.exports = {
             privateKey: process.env.PRIVATE_KEY,
             balance: "10000000000000000000000",
           },
+          {
+            privateKey: process.env.ACC1_PRIVATE_KEY,
+            balance: "10000000000000000000000",
+          }
         ]
         : [],
     },
@@ -56,14 +60,14 @@ module.exports = {
     // npx hardhat verify --network <NETWORK> <CONTRACT_ADDRESS> <CONSTRUCTOR_PARAMETERS>
     // to get exact network names: npx hardhat verify --list-networks
     apiKey: {
-      mode_sepolia: networks.mode_sepolia.verifyApiKey
+      fsc: networks.fsc.verifyApiKey
     },
     customChains: [
       {
         network: "fsc",
-        chainId: 919,
+        chainId: 201022,
         urls: {
-          apiURL: "https://fonscan.io/api",
+          apiURL: "https://fonscan.io/api/v2/smart-contracts",
           browserURL: "https://fonscan.io"
         }
       }
