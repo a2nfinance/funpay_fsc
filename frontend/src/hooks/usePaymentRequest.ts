@@ -14,7 +14,7 @@ export const usePaymentRequest = () => {
         let diffTime = now - startDate;
         if (diffTime >=0) {
             if (diffTime / (1000 * unlockEvery) <= numberOfUnlocks) {
-                numberOfUnlocks = diffTime / (1000 * unlockEvery);
+                numberOfUnlocks = Math.floor(diffTime / (1000 * unlockEvery));
             }
         } else {
             numberOfUnlocks = 0;
@@ -35,6 +35,8 @@ export const usePaymentRequest = () => {
             unlockEvery = unlockEvery / (3600 * 24 * 30);
             unlockEveryType = "month";
         }
+
+        unlockEvery = Math.floor(unlockEvery);
 
         let unlockedAmount = unlockAmountPerTime * numberOfUnlocks;
         if (paymentRequest.prepaidPercentage > 0) {
