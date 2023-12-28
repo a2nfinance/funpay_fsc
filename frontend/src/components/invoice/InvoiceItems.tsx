@@ -139,7 +139,7 @@ export default function InvoiceItems() {
                                     <Td></Td>
                                     <Td></Td>
                                     <Td>Amount Without Tax</Td>
-                                    <Td isNumeric>{amountWithoutTax}</Td>
+                                    <Td isNumeric>{amountWithoutTax.toFixed(3)}</Td>
                                 </Tr>
                                 <Tr>
                                     <Td></Td>
@@ -147,7 +147,7 @@ export default function InvoiceItems() {
                                     <Td></Td>
                                     <Td></Td>
                                     <Td>Total Tax Amount</Td>
-                                    <Td isNumeric>{totalTaxAmount}</Td>
+                                    <Td isNumeric>{totalTaxAmount.toFixed(3)}</Td>
                                 </Tr>
                                 <Tr>
                                     <Td></Td>
@@ -155,7 +155,7 @@ export default function InvoiceItems() {
                                     <Td></Td>
                                     <Td></Td>
                                     <Td>Total Amount</Td>
-                                    <Td isNumeric>{totalAmount}</Td>
+                                    <Td isNumeric>{totalAmount.toFixed(3)}</Td>
                                 </Tr>
                                 <Tr>
                                     <Td></Td>
@@ -163,7 +163,7 @@ export default function InvoiceItems() {
                                     <Td></Td>
                                     <Td></Td>
                                     <Td>Due</Td>
-                                    <Td isNumeric>{due}</Td>
+                                    <Td isNumeric>{due.toFixed(3)}</Td>
                                 </Tr>
                             </Tfoot>
                         )
