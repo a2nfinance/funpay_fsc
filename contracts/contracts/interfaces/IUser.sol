@@ -1,6 +1,6 @@
 // SPDX-License-Identifier: MIT
-pragma solidity ^0.8.0;
-import "../lib/Structs.sol";
+pragma solidity ^0.8.19;
+import "../libs/Structs.sol";
 interface IUSer {
     event Receive(address indexed _sender, uint256 _amount);
     event Deposit(address indexed _sender, address indexed _tokenAddress, uint256 _amount);
