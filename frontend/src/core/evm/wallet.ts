@@ -1,6 +1,6 @@
 import detectEthereumProvider from '@metamask/detect-provider';
 import { chains } from 'src/config/chainSettings';
-import { setAccount } from 'src/controller/network/networkSlice';
+import { setAccount, setIsConnected } from 'src/controller/network/networkSlice';
 import { store } from 'src/controller/store';
 let currentAccount = null;
 /**
@@ -129,7 +129,8 @@ export const addWalletListener = () => {
     })
 
     window.ethereum.on('disconnect', (error: ProviderRpcError) => {
-        console.log(error);
+        store.dispatch(setAccount(""));
+        store.dispatch(setIsConnected(true));
     })
 
     window.ethereum.on('message', (message: ProviderMessage) => {
@@ -142,7 +143,7 @@ function handleAccountsChanged(accounts) {
         // MetaMask is locked or the user has not connected any accounts
         console.log('Please connect to MetaMask.');
     } else if (accounts[0] !== currentAccount) {
-        currentAccount = accounts[0];
         store.dispatch(setAccount(currentAccount));
+        store.dispatch(setIsConnected(true));
     }
 }

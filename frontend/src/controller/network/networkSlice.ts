@@ -12,8 +12,8 @@ export const networkSlice = createSlice({
         setIsConnected: (state, isConnected) => {
             state.isConnected = isConnected.payload;
         },
-        setAccount: (state, accountChanged) => {
-            state.account = accountChanged.payload;
+        setAccount: (state, account) => {
+            state.account = account.payload;
         }
     },
     extraReducers(builder: ActionReducerMapBuilder<any>) {
