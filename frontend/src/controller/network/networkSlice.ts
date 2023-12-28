@@ -12,6 +12,9 @@ export const networkSlice = createSlice({
         setIsConnected: (state, isConnected) => {
             state.isConnected = isConnected.payload;
         },
+        setAccount: (state, accountChanged) => {
+            state.account = accountChanged.payload;
+        }
     },
     extraReducers(builder: ActionReducerMapBuilder<any>) {
         // builder.addCase(initContractThunk.fulfilled, (state, action) => {
@@ -22,6 +25,6 @@ export const networkSlice = createSlice({
     }
 })
 
-export const { setIsConnected } = networkSlice.actions;
+export const { setIsConnected, setAccount } = networkSlice.actions;
 
 export default networkSlice.reducer;

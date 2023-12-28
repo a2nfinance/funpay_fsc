@@ -1,6 +1,6 @@
 import detectEthereumProvider from '@metamask/detect-provider';
 import { chains } from 'src/config/chainSettings';
-import { M_SET_DAPP_ACCOUNT } from 'src/controller/network/networkSlice';
+import { setAccount } from 'src/controller/network/networkSlice';
 import { store } from 'src/controller/store';
 let currentAccount = null;
 /**
@@ -143,6 +143,6 @@ function handleAccountsChanged(accounts) {
         console.log('Please connect to MetaMask.');
     } else if (accounts[0] !== currentAccount) {
         currentAccount = accounts[0];
-        store.dispatch(M_SET_DAPP_ACCOUNT(currentAccount));
+        store.dispatch(setAccount(currentAccount));
     }
 }
