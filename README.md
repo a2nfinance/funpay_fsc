@@ -51,27 +51,27 @@ Go to folder contracts: ```cd contracts```
 ## Screenshots
 ### Homepage
 
-![home page](public/docs/homepage.png)
+![home page](frontend/public/docs/homepage.png)
 
 ### Create recurring payments
 
-![recurring payment page](public/docs/create_recurring_payment.png)
+![recurring payment page](frontend/public/docs/create_recurring_payment.png)
 
 ### Create onetime payments
 
-![onetime payment page](public/docs/create_onetime_payment.png)
+![onetime payment page](frontend/public/docs/create_onetime_payment.png)
 
 ### Create new invoice
 
-![Create invoice](public/docs/create_invoice.png)
+![Create invoice](frontend/public/docs/create_invoice.png)
 
 ### Manage balance
 
-![Balance](public/docs/balance.png)
+![Balance](frontend/public/docs/balance.png)
 
 ### Manage address book
 
-![Adddress book](public/docs/address_book.png)
+![Adddress book](frontend/public/docs/address_book.png)
 
 
 
