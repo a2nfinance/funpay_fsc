@@ -28,50 +28,68 @@ To test this app, you'll need to install the Metamask wallet and exchange FON or
 - [ ] Create invoice with recurring payement options.
 - [ ] Payment SDK.
 
-
-## TechStack
-
-### To build smart contract, we use:
-Solidity, Open Zeppelin, React, Redux, TypeScript, NodeJS, EthersJS, and FON smart chain mainnet.
-
 ## Architecture
+![](frontend/public/docs/system_architect.jpg)
 
 - Frontend (UI/UX): use NextJS and Chakra UI framework.
-- Data Handler: read/write cloud database
+- Offchain DB: use Mongo DB.
 - Smart contract interaction: use EthersJS to send transactions.
 - Wallet Connector: use Metamask API to connect wallet.
 
-## How to deploy
-Go to folder contracts: ```cd contracts```
-- Deploy mock tokens:
+We use Solidity and Hardhat to develop smart contracts. For the front-end development, we use NextJS and EthersJS. 
+## Prerequisites
+
+To understand source code, you should have basic knowlege of:
+- FON smart chain mainnet.
+- Solidity
+- Hardhat
+- NodeJS
+- React
+- Next JS
+- Wagmi
+- Linux commands.
+
+## Installation steps
+**Step 1: Install Dev environment**
+
+- Install NodeJS (16+)
+- Install VisualCode studio.
+- Install Solidity & Hardhat addons for VisualCode.
+
+**Step 2: Install libraries**
+- Go to each folder
+    - ```cd frontend ``` -> ```npm i```
+    - ```cd contracts``` -> ```npm i```
+
+**Step 3: Deploy smart contracts**
+
+Go to folder: ```cd contracts```
+- Deploy contracts:
     - Use: ```npx hardhat deploy-contract  --network fsc --show-stack-traces ```
 - Verify contracts:
     - Use: ```npx hardhat verify --network fsc {contract address}```
+- To test smart contracts
+    - Use ```npx hardhat test```.
 
-## Screenshots
-### Homepage
+**Step 4: Setup .env**
 
-![home page](frontend/public/docs/homepage.png)
+Setup ENV file in each folder: Frontend, Contracts. 
 
-### Create recurring payments
+- ```cp .env.example .env``` and change variable values.
 
-![recurring payment page](frontend/public/docs/create_recurring_payment.png)
 
-### Create onetime payments
+## Commands to start
 
-![onetime payment page](frontend/public/docs/create_onetime_payment.png)
+- To run Backend and Frontend applications in Production mode, use this command: ```npm run build``` and ```pm2 run npm --name "your app name" -- run start```
 
-### Create new invoice
 
-![Create invoice](frontend/public/docs/create_invoice.png)
+## Contribution
+We welcome any ideas or suggestions to help us make FunPay better. Please do not hesitate to contact us via email at levi@a2n.finance.
 
-### Manage balance
+## License
 
-![Balance](frontend/public/docs/balance.png)
-
-### Manage address book
-
-![Adddress book](frontend/public/docs/address_book.png)
+This package is released under the BSL 1.1 License.
+   
 
 
 
