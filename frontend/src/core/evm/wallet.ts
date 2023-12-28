@@ -125,12 +125,15 @@ export const addWalletListener = () => {
     });
 
     window.ethereum.on('connect', (connectInfo: ConnectInfo) => {
-        console.log(connectInfo);
+        // store.dispatch(setIsConnected(true));
+        console.log("Connect wallet");
     })
 
     window.ethereum.on('disconnect', (error: ProviderRpcError) => {
+        console.log("Disconnect");
+        currentAccount = null;
         store.dispatch(setAccount(""));
-        store.dispatch(setIsConnected(true));
+        store.dispatch(setIsConnected(false));
     })
 
     window.ethereum.on('message', (message: ProviderMessage) => {
@@ -142,7 +145,10 @@ function handleAccountsChanged(accounts) {
     if (accounts.length === 0) {
         // MetaMask is locked or the user has not connected any accounts
         console.log('Please connect to MetaMask.');
+        store.dispatch(setAccount(""));
+        store.dispatch(setIsConnected(false));
     } else if (accounts[0] !== currentAccount) {
+        currentAccount = accounts[0];
         store.dispatch(setAccount(currentAccount));
         store.dispatch(setIsConnected(true));
     }
