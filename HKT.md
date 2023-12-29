@@ -42,7 +42,7 @@ To ensure fairness to both parties, users must possess the qualified assigned pr
 
 ## 4. Usecases
 
-SWAYPAY can be used for the following purposes:
+FunPay can be used for the following purposes:
 
 - **Paying Freelancer Salaries and Subscription Services:** FunPay supports crypto streaming for payments, enabling freelancers to receive payments in real-time for their services or subscriptions. This feature provides security and transparency, protecting users in the labor market.
 
