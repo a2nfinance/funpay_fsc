@@ -49,12 +49,16 @@ SWAYPAY can be used for the following purposes:
 - **Transaction and Invoicing:** FunPay facilitates multiple transactions between parties, such as buyers and service providers. Additionally, it is suitable for micropayments, reducing transaction fees and costs for payers and other payment engines built on blockchain.
 
 ## 5. Technical implementation
-![](https://swaypay.a2n.finance/docs/system_architect.jpg)
+![](https://funpay.a2n.finance/docs/system_architect.jpg)
 
-
+We use Solidity and Hardhat to develop smart contracts. For the front-end development, we use NextJS and EthersJS.
 
 ## 6. Future Development
+FunPay is currently in the process of developing numerous additional features. We have plans to integrate other applications catering to freelancers and job marketplaces. In the short term, our agenda includes:
 
+- Optimizing and refactoring smart contracts.
+- Introducing additional features related to invoices.
+- Implementing notification systems.
+- Integrating an Oracle to support fiat price conversion.
+- Enhancing the user experience and optimizing UI components.
 
-
-### 7. Conclusion
