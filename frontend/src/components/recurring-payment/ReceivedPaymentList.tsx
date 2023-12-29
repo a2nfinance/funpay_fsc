@@ -100,7 +100,7 @@ export default function ReceivedPaymentList() {
                                             <Td isNumeric>
                                                 <Tag colorScheme={"purple"}>
                                                     <TagLabel>
-                                                        <PaymentProcess payment={p} />
+                                                        <PaymentProcess  key={`received-payment-${index}`} payment={p} />
                                                     </TagLabel>
                                                 </Tag>
 

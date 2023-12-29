@@ -93,7 +93,7 @@ export default function SentPaymentList() {
                                             <Td isNumeric>
                                                 <Tag colorScheme={"purple"}>
                                                     <TagLabel>
-                                                       <PaymentProcess payment={p} />
+                                                       <PaymentProcess  key={`sent-payment-${index}`} payment={p} />
                                                     </TagLabel>
                                                 </Tag>
 

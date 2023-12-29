@@ -9,7 +9,13 @@ import "./interfaces/IUser.sol";
 
 import "./libs/Structs.sol";
 
+/**
+ * @title FunPay contract: manage funds and payments.
+ * @author levia2n
+ * @notice version 1.0.0. In ver 2.0.0, this contract need to divide recurring payments to separated contracts.
+ */
 contract FunPay is IFunPay, IUSer, Pausable, ReentrancyGuard {
+  // Data structure.
   uint private _requestCount;
   address private _contractOwner;
   mapping(uint => Structs.PaymentRequest) private _paymentRequests;
@@ -23,6 +29,9 @@ contract FunPay is IFunPay, IUSer, Pausable, ReentrancyGuard {
     _contractOwner = msg.sender;
   }
 
+  /**
+   * Handle case: someone sends a native token amount to this contract.
+   */
   receive() external payable {
     address addressThis = address(this);
     address sender = msg.sender;
@@ -43,6 +52,7 @@ contract FunPay is IFunPay, IUSer, Pausable, ReentrancyGuard {
     emit Receive(sender, msg.value);
   }
 
+  // Deposit tokens (native or custom token)
   function deposit(address _tokenAddress, uint _amount) external payable override whenNotPaused nonReentrant {
     require(_amount > 0, "_amount<=0");
     address sender = msg.sender;
@@ -69,6 +79,7 @@ contract FunPay is IFunPay, IUSer, Pausable, ReentrancyGuard {
     emit Deposit(sender, _tokenAddress, _amount);
   }
 
+  // Get payer's payments.
   function getSenderRequests() external view override returns (Structs.PaymentRequest[] memory) {
     uint[] memory pr = _senderToRequests[msg.sender];
     Structs.PaymentRequest[] memory prArr = new Structs.PaymentRequest[](pr.length);
@@ -79,6 +90,7 @@ contract FunPay is IFunPay, IUSer, Pausable, ReentrancyGuard {
     return prArr;
   }
 
+  // Get recipient's payments.
   function getRecipientRequests() external view override returns (Structs.PaymentRequest[] memory) {
     uint[] memory pr = _recipientToRequests[msg.sender];
     Structs.PaymentRequest[] memory prArr = new Structs.PaymentRequest[](pr.length);
@@ -89,6 +101,7 @@ contract FunPay is IFunPay, IUSer, Pausable, ReentrancyGuard {
     return prArr;
   }
 
+  // Create a recurring payment.
   function createRecurringPayments(
     Structs.RecurringSetting memory _settings,
     Structs.RecurringRecipient[] memory _recipients
@@ -105,12 +118,15 @@ contract FunPay is IFunPay, IUSer, Pausable, ReentrancyGuard {
     for (uint i = 0; i < _recipients.length; i++) {
       recipient = _recipients[i];
       payAmount = recipient.unlockAmountPerTime * recipient.numberOfUnlocks;
+
+      // If this payment request has a prepaid amount.
       if (recipient.prepaidPercentage > 0) {
         payAmount = _getAmountWithPrepaid(payAmount, recipient.prepaidPercentage);
       }
       totalAmount += payAmount;
     }
 
+    // whether an user's balance is enough.
     require(tokenBalance - lockedAmount >= totalAmount, "totalAmount<balance");
 
     Structs.PaymentRequest memory pr;
@@ -151,6 +167,7 @@ contract FunPay is IFunPay, IUSer, Pausable, ReentrancyGuard {
     emit CreateRecurringPayment(sender);
   }
 
+  // Create a onetime payment
   function createOneTimePayment(
     Structs.OneTimeSetting memory _settings,
     Structs.OneTimeRecipient[] memory _recipients
@@ -172,6 +189,7 @@ contract FunPay is IFunPay, IUSer, Pausable, ReentrancyGuard {
 
     require(tokenBalance - lockedAmount >= totalAmount, "totalAmount>balance");
 
+    // If the payment is 'paynow' type
     if (_settings.isPayNow) {
       _usersBalance[sender][_settings.tokenAddress] -= totalAmount;
 
@@ -223,6 +241,7 @@ contract FunPay is IFunPay, IUSer, Pausable, ReentrancyGuard {
     emit CreateOneTimePayment(sender);
   }
 
+  // Only the recipient can withdraw a token amount.
   function withdrawFromPaymentRequest(uint _requestId, uint _amount) external override whenNotPaused nonReentrant {
     require(_amount > 0, "amount<=0");
     Structs.PaymentRequest memory pr = _paymentRequests[_requestId];
@@ -245,6 +264,7 @@ contract FunPay is IFunPay, IUSer, Pausable, ReentrancyGuard {
     _usersBalance[pr.sender][pr.tokenAddress] -= _amount;
     _usersLockedAmount[pr.sender][pr.tokenAddress] -= _amount;
 
+    // Transfer a token amount.
     if (pr.isNativeToken) {
       payable(pr.recipient).transfer(_amount);
     } else {
@@ -254,22 +274,26 @@ contract FunPay is IFunPay, IUSer, Pausable, ReentrancyGuard {
     emit WithdrawFromPaymentRequest(msg.sender, _requestId, _amount);
   }
 
+  //Only the user with right privileges.
   function cancelPaymentRequest(uint _requestId) external override whenNotPaused nonReentrant {
     Structs.PaymentRequest memory paymentRequest = _paymentRequests[_requestId];
     require(paymentRequest.sender != address(0), "!requestId");
     require(paymentRequest.status == 1, "!active");
     bool checkPermission = _checkPermission(paymentRequest, true);
+
+    // Check privileges
     require(checkPermission, "!permission");
     uint unlockedAmount = _getRecipientUnlockedAmount(paymentRequest);
     uint availableBalance = unlockedAmount - (paymentRequest.paymentAmount - paymentRequest.remainingBalance);
 
-    // Change state
+    // Change status
     _paymentRequests[_requestId].status = 2;
     _paymentRequests[_requestId].remainingBalance = 0;
 
     _usersBalance[msg.sender][paymentRequest.tokenAddress] -= availableBalance;
     _usersLockedAmount[msg.sender][paymentRequest.tokenAddress] -= paymentRequest.remainingBalance;
 
+    // Transfer a token amount.
     if (paymentRequest.isNativeToken) {
       payable(paymentRequest.recipient).transfer(availableBalance);
     } else {
@@ -279,6 +303,7 @@ contract FunPay is IFunPay, IUSer, Pausable, ReentrancyGuard {
     emit CancelPaymentRequest(msg.sender, _requestId);
   }
 
+  // Transfer a payment to another recipient.
   function transferPaymentRequest(uint _requestId, address _to) external override whenNotPaused nonReentrant {
     Structs.PaymentRequest memory paymentRequest = _paymentRequests[_requestId];
     require(paymentRequest.sender != address(0), "!requestId");
@@ -319,6 +344,7 @@ contract FunPay is IFunPay, IUSer, Pausable, ReentrancyGuard {
 
     _paymentRequests[_requestId].recipient = _to;
 
+    // Transfer the available unlocked amount to the old recipient.
     if (paymentRequest.isNativeToken) {
       payable(paymentRequest.recipient).transfer(availableBalance);
     } else {
@@ -328,6 +354,7 @@ contract FunPay is IFunPay, IUSer, Pausable, ReentrancyGuard {
     emit TransferPaymentRequest(msg.sender, _requestId, _to);
   }
 
+  // Get an user's token balances.
   function getUserTokensBalance() external view override returns (Structs.Balance[] memory) {
     address sender = msg.sender;
     address[] memory tokens = _usersTokens[sender];
@@ -337,10 +364,10 @@ contract FunPay is IFunPay, IUSer, Pausable, ReentrancyGuard {
       balance = Structs.Balance(tokens[i], _usersBalance[sender][tokens[i]], _usersLockedAmount[sender][tokens[i]]);
       balances[i] = balance;
     }
-
     return balances;
   }
 
+  // withdraw from an user's balance 
   function withdrawBalance(address _tokenAddress, uint _amount) external override whenNotPaused nonReentrant {
     require(_amount > 0, "amount<=0");
     address sender = msg.sender;
@@ -366,6 +393,7 @@ contract FunPay is IFunPay, IUSer, Pausable, ReentrancyGuard {
     return (_recurringAmount + prepaidAmount);
   }
 
+  // Get the unlocked amount of a recurring payment.
   function _getRecipientUnlockedAmount(Structs.PaymentRequest memory _paymentRequest) private view returns (uint256) {
     uint unlockedAmount = 0;
     if (block.timestamp < _paymentRequest.startDate) {
@@ -391,6 +419,7 @@ contract FunPay is IFunPay, IUSer, Pausable, ReentrancyGuard {
     return unlockedAmount;
   }
 
+  // Check privileges
   function _checkPermission(
     Structs.PaymentRequest memory _paymentRequest,
     bool _cancelOrTransfer
@@ -412,6 +441,7 @@ contract FunPay is IFunPay, IUSer, Pausable, ReentrancyGuard {
     return flag;
   }
 
+  // Check blockchain timestamp.
   function getBlockTimestamp() external view override returns (uint) {
     return block.timestamp;
   }
